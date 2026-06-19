@@ -25,7 +25,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="card-title"></h4>
-                                <a href="{{ route('country.add') }}" class="btn btn-primary">
+                                <a href="{{ route('admin.country.add') }}" class="btn btn-primary">
                                     <i class="mdi mdi-plus"></i> Add Country
                                 </a>
                             </div>
@@ -85,7 +85,7 @@
                                                                 data-dismiss="modal">
                                                                 Cancel
                                                             </button>
-                                                            <a href="{{ route('country.delete', $country->id) }}"
+                                                            <a href="{{ route('admin.country.delete', $country->id) }}"
                                                                 class="btn btn-danger"
                                                                 style="border-radius: 4px; padding: 8px 25px;">
                                                                 Delete

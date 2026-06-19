@@ -11,7 +11,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('blog.index') }}">Blog</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.blog.index') }}">Blog</a></li>
                                 <li class="breadcrumb-item active">Edit</li>
                             </ol>
                         </nav>
@@ -36,7 +36,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data"
+                        <form action="{{ route('admin.blog.update', $blog->id) }}" method="POST" enctype="multipart/form-data"
                             class="form-horizontal m-t-30">
                             @csrf
 
@@ -78,7 +78,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="mdi mdi-content-save"></i> Update
                                 </button>
-                                <a href="{{ route('blog.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('admin.blog.index') }}" class="btn btn-secondary">
                                     <i class="mdi mdi-arrow-left"></i> Back
                                 </a>
                             </div>

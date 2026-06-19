@@ -23,7 +23,7 @@
                 <!-- Logo -->
                 <!-- ============================================================== -->
                 <div class="navbar-brand">
-                    <a href="{{ route('dashboard') }}" class="logo">
+                    <a href="{{ route('admin.dashboard') }}" class="logo">
                         <!-- Logo icon -->
                         <b class="logo-icon">
                             <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
@@ -99,9 +99,10 @@
                                 src="{{ Auth::user()->avatar ? asset('upload/user/avatar/' . Auth::user()->avatar) : asset('admin/assets/images/users/5.jpg') }}"
                                 alt="user" class="rounded-circle" width="31"></a>
                         <div class="dropdown-menu dropdown-menu-right user-dd animated">
-                            <a class="dropdown-item" href="{{ route('profile') }}"><i class="ti-user m-r-5 m-l-5"></i>
+                            <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
+                                    class="ti-user m-r-5 m-l-5"></i>
                                 My Profile</a>
-                            <form action="{{ route('admin.logout') }}" method="POST">
+                            <form action="{{ route('admin.admin.logout') }}" method="POST">
                                 @csrf
                                 <a class="dropdown-item" href="#" onclick="this.closest('form').submit()">
                                     <i class="mdi mdi-power"></i> Logout

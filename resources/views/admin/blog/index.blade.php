@@ -26,7 +26,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h4 class="card-title">Article List</h4>
-                                <a href="{{ route('blog.add') }}" class="btn btn-primary">
+                                <a href="{{ route('admin.blog.add') }}" class="btn btn-primary">
                                     <i class="mdi mdi-plus"></i> New Article
                                 </a>
                             </div>
@@ -70,7 +70,7 @@
                                             <!-- <td>{{ $blog->created_at->format('d/m/Y H:i') }}</td> -->
                                             <td>
                                                 {{-- Edit --}}
-                                                <a href="{{ route('blog.edit', $blog->id) }}" class="btn btn-info btn-sm">
+                                                <a href="{{ route('admin.blog.edit', $blog->id) }}" class="btn btn-info btn-sm">
                                                     <i class="mdi mdi-pencil"></i> Edit
                                                 </a>
                                                 {{-- Delete --}}
@@ -106,7 +106,7 @@
                                                                 data-dismiss="modal">
                                                                 Cancel
                                                             </button>
-                                                            <a href="{{ route('blog.delete', $blog->id) }}"
+                                                            <a href="{{ route('admin.blog.delete', $blog->id) }}"
                                                                 class="btn btn-danger"
                                                                 style="border-radius: 4px; padding: 8px 25px;">
                                                                 Delete

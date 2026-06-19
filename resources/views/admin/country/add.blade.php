@@ -11,7 +11,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="#">Home</a></li>
-                                <li class="breadcrumb-item"><a href="{{ route('country.index') }}">Country</a></li>
+                                <li class="breadcrumb-item"><a href="{{ route('admin.country.index') }}">Country</a></li>
                                 <li class="breadcrumb-item active">Add</li>
                             </ol>
                         </nav>
@@ -38,7 +38,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('country.list') }}" method="POST" class="form-horizontal m-t-30">
+                        <form action="{{ route('admin.country.list') }}" method="POST" class="form-horizontal m-t-30">
                             @csrf
                             <div class="form-group">
                                 <label>Country Name</label>
@@ -49,7 +49,7 @@
                                 <button type="submit" class="btn btn-success">
                                     <i class="mdi mdi-content-save"></i> Save
                                 </button>
-                                <a href="{{ route('country.index') }}" class="btn btn-secondary">
+                                <a href="{{ route('admin.country.index') }}" class="btn btn-secondary">
                                     <i class="mdi mdi-arrow-left"></i> Back
                                 </a>
                             </div>
