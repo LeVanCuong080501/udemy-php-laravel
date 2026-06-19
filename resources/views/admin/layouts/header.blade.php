@@ -101,8 +101,12 @@
                         <div class="dropdown-menu dropdown-menu-right user-dd animated">
                             <a class="dropdown-item" href="{{ route('profile') }}"><i class="ti-user m-r-5 m-l-5"></i>
                                 My Profile</a>
-                            <a class="dropdown-item" href="javascript:void(0)"><i class="ti-wallet m-r-5 m-l-5"></i>
-                                Logout</a>
+                            <form action="{{ route('admin.logout') }}" method="POST">
+                                @csrf
+                                <a class="dropdown-item" href="#" onclick="this.closest('form').submit()">
+                                    <i class="mdi mdi-power"></i> Logout
+                                </a>
+                            </form>
                             <!-- <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i>Logout</a> -->
                         </div>
                     </li>
