@@ -1,0 +1,136 @@
+@extends('admin.layouts.admin')
+
+@section('main')
+    <div class="page-wrapper">
+        <div class="page-breadcrumb">
+            <div class="row">
+                <div class="col-5 align-self-center">
+                    <h4 class="page-title">Blog</h4>
+                </div>
+                <div class="col-7 align-self-center">
+                    <div class="d-flex align-items-center justify-content-end">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                <li class="breadcrumb-item active">Blog</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4 class="card-title">Article List</h4>
+                                <a href="{{ route('blog.add') }}" class="btn btn-primary">
+                                    <i class="mdi mdi-plus"></i> New Article
+                                </a>
+                            </div>
+
+                            @if(session('success'))
+                                <div class="alert alert-success alert-dismissible m-t-20">
+                                    <button type="button" class="close" data-dismiss="alert">×</button>
+                                    <h4><i class="icon fa fa-check"></i> Notification!</h4>
+                                    {{ session('success') }}
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Image</th>
+                                        <th>Description</th>
+                                        <th>Created_at</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($blogs as $blog)
+                                        <tr>
+                                            <td>{{ $blog->id }}</td>
+                                            <td>{{ $blog->title }}</td>
+                                            <td>
+                                                @if($blog->image)
+                                                    <img src="{{ asset('upload/blog/' . $blog->image) }}" width="100" height="100"
+                                                        style="object-fit:cover; border-radius:4px;">
+                                                @else
+                                                    <span class="badge badge-secondary">No Image</span>
+                                                @endif
+                                            </td>
+                                            <td>{{ Str::limit($blog->description, 60) }}</td>
+                                            <td>{{ $blog->created_at->diffForHumans() }}</td>
+                                            <!-- <td>{{ $blog->created_at->format('d/m/Y H:i') }}</td> -->
+                                            <td>
+                                                {{-- Edit --}}
+                                                <a href="{{ route('blog.edit', $blog->id) }}" class="btn btn-info btn-sm">
+                                                    <i class="mdi mdi-pencil"></i> Edit
+                                                </a>
+                                                {{-- Delete --}}
+                                                <a href="#" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                    data-target="#deleteModal{{ $blog->id }}">
+                                                    <i class="mdi mdi-delete"></i> Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="deleteModal{{ $blog->id }}" tabindex="-1" role="dialog">
+                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="border: none; border-radius: 8px;">
+                                                    <div class="modal-body text-center" style="padding: 35px 25px;">
+
+                                                        {{-- Icon cảnh báo --}}
+                                                        <div
+                                                            style="width: 70px; height: 70px; border-radius: 50%; background: #feded7; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                                                            <i class="mdi mdi-alert-outline"
+                                                                style="font-size: 35px; color: #fa5838;"></i>
+                                                        </div>
+
+                                                        <h4 style="font-weight: 500; color: #4F5467; margin-bottom: 10px;">
+                                                            Are you sure?
+                                                        </h4>
+                                                        <p style="color: #afb5c1; font-size: 14px; margin-bottom: 25px;">
+                                                            "{{ $blog->title }}" will be permanently deleted and cannot
+                                                            be restored.
+                                                        </p>
+
+                                                        <div class="d-flex justify-content-center" style="gap: 10px;">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                style="border-radius: 4px; padding: 8px 25px;"
+                                                                data-dismiss="modal">
+                                                                Cancel
+                                                            </button>
+                                                            <a href="{{ route('blog.delete', $blog->id) }}"
+                                                                class="btn btn-danger"
+                                                                style="border-radius: 4px; padding: 8px 25px;">
+                                                                Delete
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <tr>
+                                            <td colspan="6" class="text-center">No Article!</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        {{-- Pagination --}}
+                        <div class="pagination d-flex justify-content-center">
+                            {{ $blogs->links('pagination::bootstrap-4') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
