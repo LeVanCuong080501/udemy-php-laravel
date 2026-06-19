@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ListCountryRequest;
+use App\Http\Requests\Admin\ListCountryRequest;
 use App\Models\Country;
 use Illuminate\Http\Request;
 
