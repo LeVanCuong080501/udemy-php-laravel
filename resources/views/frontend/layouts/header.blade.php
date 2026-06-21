@@ -1,3 +1,18 @@
+<style>
+    .logout-btn {
+        width: 100%;
+        border: none;
+        background: none;
+        text-align: left;
+        padding: 8px 20px;
+        cursor: pointer;
+    }
+
+    .logout-btn:hover {
+        background: #f5f5f5;
+    }
+</style>
+
 <header id="header"><!--header-->
     <div class="header_top"><!--header_top-->
         <div class="container">
@@ -59,24 +74,38 @@
                 </div>
                 <div class="col-md-8 clearfix">
                     <div class="shop-menu clearfix pull-right">
-                        <ul class="nav navbar-nav">
+                        <ul class="nav navbar-nav float-right">
                             @if(Auth::guard('member')->check() && Auth::guard('member')->user()->level === 0)
-                                {{-- Member đã login --}}
-                                <li><a href="#"><i class="fa fa-user"></i> {{ Auth::guard('member')->user()->name }}</a>
+
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-user"></i>
+                                        {{ Auth::guard('member')->user()->name }}
+                                        <b class="caret"></b>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right user-dd animated">
+                                        <li>
+                                            <form action="{{ route('member.logout') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item logout-btn">
+                                                    <i class="fa fa-sign-out"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            @else
+                                <li>
+                                    <a href="{{ route('member.login') }}">
+                                        <i class="fa fa-lock"></i> Login
+                                    </a>
                                 </li>
                                 <li>
-                                    <form action="{{ route('member.logout') }}" method="POST" style="display:inline">
-                                        @csrf
-                                        <button type="submit"
-                                            style="background:none; border:none; color:inherit; cursor:pointer; padding: 15px;">
-                                            <i class="fa fa-sign-out"></i> Logout
-                                        </button>
-                                    </form>
-                                </li>
-                            @else
-                                {{-- Chưa login --}}
-                                <li><a href="{{ route('member.login') }}"><i class="fa fa-lock"></i> Login</a></li>
-                                <li><a href="{{ route('member.register') }}"><i class="fa fa-user-plus"></i> Register</a>
+                                    <a href="{{ route('member.register') }}">
+                                        <i class="fa fa-user-plus"></i> Register
+                                    </a>
                                 </li>
                             @endif
                         </ul>

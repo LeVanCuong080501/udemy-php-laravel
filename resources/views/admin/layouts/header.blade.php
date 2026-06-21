@@ -105,7 +105,7 @@
                             <form action="{{ route('admin.logout') }}" method="POST">
                                 @csrf
                                 <a class="dropdown-item" href="#" onclick="this.closest('form').submit()">
-                                    <i class="mdi mdi-power"></i> Logout
+                                    <i class="mdi mdi-logout"></i> Logout
                                 </a>
                             </form>
                             <!-- <a class="dropdown-item" href="javascript:void(0)"><i class="ti-email m-r-5 m-l-5"></i>Logout</a> -->
