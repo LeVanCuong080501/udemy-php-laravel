@@ -15,10 +15,9 @@ use Illuminate\Support\Facades\Storage;
 class MemberController extends Controller
 {
     // ==================== LOGIN ====================
-
     public function login()
     {
-        if (Auth::check()) {
+        if (Auth::guard('member')->check()) {
             return redirect()->route('home');
         }
         return view('frontend.auth.login');
@@ -29,14 +28,14 @@ class MemberController extends Controller
         $credentials = $request->only('email', 'password');
         $remember = $request->has('remember');
 
-        if (Auth::attempt($credentials, $remember)) {
+        if (Auth::guard('member')->attempt($credentials, $remember)) {
             // Chỉ cho member (level = 0) login frontend
-            if (Auth::user()->level === 0) {
+            if (Auth::guard('member')->user()->level === 0) {
                 return redirect()->route('home');
             }
 
             // Nếu là admin (level = 1) thì đăng xuất, không cho login frontend
-            Auth::logout();
+            Auth::guard('member')->logout();
             return back()->withErrors(['email' => 'Tài khoản không hợp lệ.']);
         }
 
@@ -46,10 +45,9 @@ class MemberController extends Controller
     }
 
     // ==================== REGISTER ====================
-
     public function register()
     {
-        if (Auth::check()) {
+        if (Auth::guard('member')->check()) {
             return redirect()->route('home');
         }
         $countries = Country::orderBy('name')->get();
@@ -79,17 +77,16 @@ class MemberController extends Controller
         ]);
 
         // Tự động login sau khi đăng ký
-        Auth::login($user);
+        Auth::guard('member')->login($user);
 
         return redirect()->route('home')
             ->with('success', 'Đăng ký thành công! Chào mừng ' . $user->name);
     }
 
     // ==================== LOGOUT ====================
-
     public function logout()
     {
-        Auth::logout();
+        Auth::guard('member')->logout();
         return redirect()->route('member.login')
             ->with('success', 'Đã đăng xuất thành công.');
     }

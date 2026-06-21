@@ -21,9 +21,9 @@ class UserController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
+        Auth::guard('admin')->logout();
+        // request()->session()->invalidate();
+        // request()->session()->regenerateToken();
         return redirect()->route('login');
     }
 

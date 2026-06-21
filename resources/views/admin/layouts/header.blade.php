@@ -102,7 +102,7 @@
                             <a class="dropdown-item" href="{{ route('admin.profile') }}"><i
                                     class="ti-user m-r-5 m-l-5"></i>
                                 My Profile</a>
-                            <form action="{{ route('admin.admin.logout') }}" method="POST">
+                            <form action="{{ route('admin.logout') }}" method="POST">
                                 @csrf
                                 <a class="dropdown-item" href="#" onclick="this.closest('form').submit()">
                                     <i class="mdi mdi-power"></i> Logout
