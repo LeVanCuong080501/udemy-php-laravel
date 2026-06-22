@@ -103,7 +103,7 @@
                                 </div>
                             @endif
 
-                            <form action="{{ route('update') }}" method="POST" enctype="multipart/form-data"
+                            <form action="{{ route('admin.update') }}" method="POST" enctype="multipart/form-data"
                                 class="form-horizontal form-material">
                                 @csrf
 

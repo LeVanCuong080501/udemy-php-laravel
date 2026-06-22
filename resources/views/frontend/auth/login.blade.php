@@ -1,4 +1,4 @@
-@extends('frontend.layouts.main')
+@extends('frontend.layouts.login')
 
 @section('content')
 
@@ -42,9 +42,11 @@
                 </div>
 
                 <div style="margin-left: 33.333333%;" class="col-sm-4 col-sm-offset-1">
-                    <div class="login-form">
-                        <button style="width: 92px;" onclick="window.location.href='{{ route('member.register') }}'"
-                            type="button" class="btn btn-default">Sign Up</button>
+                    <div class="signup-form">
+                        <button
+                            style="margin-top: 23px; width: 92px; background: #FE980F; border: medium none;border-radius: 0;color: #FFFFFF;display: block;font-family: 'Roboto', sans-serif;padding: 6px 25px;"
+                            onclick="window.location.href='{{ route('member.register') }}'" type="button"
+                            class="btn btn-default signup-form">Sign Up</button>
                     </div>
                 </div>
             </div>

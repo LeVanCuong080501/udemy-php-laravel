@@ -1,3 +1,18 @@
+<style>
+    .logout-btn {
+        width: 100%;
+        border: none;
+        background: none;
+        text-align: left;
+        padding: 8px 20px;
+        cursor: pointer;
+    }
+
+    .logout-btn:hover {
+        background: #f5f5f5;
+    }
+</style>
+
 <header id="header"><!--header-->
     <div class="header_top"><!--header_top-->
         <div class="container">
@@ -59,13 +74,40 @@
                 </div>
                 <div class="col-md-8 clearfix">
                     <div class="shop-menu clearfix pull-right">
-                        <ul class="nav navbar-nav">
-                            <!-- <li><a href=""><i class="fa fa-user"></i> Account</a></li>
-                            <li><a href=""><i class="fa fa-star"></i> Wishlist</a></li>
-                            <li><a href="checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                            <li><a href="cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li> -->
-                            <li><a href="{{ route('member.login') }}"><i class="fa fa-lock"></i> Login</a></li>
-                            <li><a href="{{ route('member.register') }}"><i class="fa fa-user-plus"></i>Register</a></li>
+                        <ul class="nav navbar-nav float-right">
+                            @if(Auth::guard('member')->check() && Auth::guard('member')->user()->level === 0)
+
+                                <li class="nav-item dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-user"></i>
+                                        {{ Auth::guard('member')->user()->name }}
+                                        <b class="caret"></b>
+                                    </a>
+
+                                    <ul class="dropdown-menu dropdown-menu-right user-dd animated">
+                                        <li>
+                                            <form action="{{ route('member.logout') }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item logout-btn">
+                                                    <i class="fa fa-sign-out"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                            @else
+                                <li>
+                                    <a href="{{ route('member.login') }}">
+                                        <i class="fa fa-lock"></i> Login
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('member.register') }}">
+                                        <i class="fa fa-user-plus"></i> Register
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
@@ -100,7 +142,7 @@
                             </li>
                             <li class="dropdown"><a href="#">Blog<i class="fa fa-angle-down"></i></a>
                                 <ul role="menu" class="sub-menu">
-                                    <li><a href="blog.html">Blog List</a></li>
+                                    <li><a href="{{ route('blog.index') }}">Blog List</a></li>
                                     <li><a href="blog-single.html">Blog Single</a></li>
                                 </ul>
                             </li>
