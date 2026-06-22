@@ -4,9 +4,10 @@ use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Frontend\MemberController;
 
+use App\Http\Controllers\Frontend\MemberController;
 use App\Http\Controllers\Frontend\HomeController as FrontendHomeController;
+use App\Http\Controllers\Frontend\BlogDetailController;
 
 
 
@@ -66,5 +67,9 @@ Route::prefix('member')->name('member.')->group(function () {
         Route::post('/logout', [MemberController::class, 'logout'])->name('logout');
     });
 });
+
+// blog
+Route::get('/blog', [BlogDetailController::class, 'index'])->name('blog.index');
+Route::get('/blog/detail/{id}', [BlogDetailController::class, 'detail'])->name('blog.detail');
 
 Auth::routes();
