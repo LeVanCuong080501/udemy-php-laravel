@@ -36,7 +36,7 @@
                                 </a>
 
                                 {{-- Mô tả ngắn (strip HTML nếu content là CKEditor) --}}
-                                <p>{{ Str::limit(strip_tags($post->description), 200) }}</p>
+                                <p>{{ Str::limit(strip_tags($post->content), 200) }}</p>
 
                                 {{-- Nút đọc thêm → sang trang detail --}}
                                 <a class="btn btn-primary" href="{{ route('blog.detail', $post->id) }}">Read More</a>
