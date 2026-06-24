@@ -21,13 +21,16 @@
                             {{-- Ảnh bài viết --}}
                             @if($data->image)
                                 <img src="{{ asset('upload/blog/' . $data->image) }}" alt="{{ $data->title }}"
-                                    style="width:100%; max-height:400px; object-fit:cover; margin-bottom:15px;">
+                                    style="width:100%; max-height:1000px; object-fit:cover; margin-bottom:15px;">
                             @endif
 
                             {{-- Nội dung đầy đủ (render HTML từ CKEditor) --}}
                             <div class="blog-content">
-                                {!! $data->description !!}
                                 {!! $data->content !!}
+                                <h3><strong>DETAIL</strong></h3>
+                                <div style="white-space: pre-line;">
+                                    {!! $data->description !!}
+                                </div>
                             </div>
                             {{-- Phân trang Prev / Next --}}
                             <div class="pager-area" style="margin-top: 20px;">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BlogDetailController extends Controller
 {
@@ -28,5 +29,15 @@ class BlogDetailController extends Controller
             ->first();
 
         return view('frontend.blog.detail', compact('data', 'prev', 'next'));
+    }
+
+    // ============= RATE =============
+    public function rate(Request $request)
+    {
+        // user chưa login mà đánh giá sẽ báo lỗi cần phải login
+        if (!Auth::check()) {
+            return back()->withErrors(['auth' => 'bạn cần phải đăng nhập để đánh giá bài viết']);
+        }
+        
     }
 }

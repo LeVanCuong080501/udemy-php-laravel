@@ -10,10 +10,15 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('level')->after('remember_token')
-                ->default(1)->comment('1:admin | 0:member');
-        });
+        if (!Schema::hasColumn('users', 'level')) {
+
+            Schema::table('users', function (Blueprint $table) {
+                $table->unsignedInteger('level')
+                    ->after('remember_token')
+                    ->default(1)
+                    ->comment('1:admin | 0:member');
+            });
+        }
     }
 
     /**
