@@ -68,8 +68,21 @@ Route::prefix('member')->name('member.')->group(function () {
     });
 });
 
-// blog
-Route::get('/blog', [BlogDetailController::class, 'index'])->name('blog.index');
-Route::get('/blog/detail/{id}', [BlogDetailController::class, 'detail'])->name('blog.detail');
+//blog //blog-detail-rate
+Route::prefix('blog')->name('blog.')->group(function () {
+    Route::get('/', [BlogDetailController::class, 'index'])->name('index');
+    Route::get('/detail/{id}', [BlogDetailController::class, 'detail'])->name('detail');
+
+    // Rate - AJAX
+    Route::post('/rate', [BlogDetailController::class, 'rate'])->name('rate');
+
+    // // Comment - AJAX
+    // Route::post('/comment', [BlogDetailController::class, 'storeComment'])->name('comment.store');
+    // Route::get('/{blogId}/comments', [BlogDetailController::class, 'loadComments'])->name('comment.load');
+
+    // // Reaction - AJAX
+    // Route::post('/reaction', [BlogDetailController::class, 'reaction'])->name('reaction');
+});
+
 
 Auth::routes();

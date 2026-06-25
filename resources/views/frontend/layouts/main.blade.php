@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{ asset('admin/assets/images/logo.png') }}" rel="icon" type="image/png" sizes="16x16">
     <title>Home | E-Shopper</title>
     <link href="{{ asset('frontend/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -32,6 +33,8 @@
         href="{{ asset('frontend/images/ico/apple-touch-icon-57-precomposed.png') }}">
 </head><!--/head-->
 
+
+
 <body>
     @include('frontend.layouts.header')
 
@@ -50,6 +53,13 @@
     <script src="{{ asset('frontend/js/price-range.js') }}"></script>
     <script src="{{ asset('frontend/js/jquery.prettyPhoto.js') }}"></script>
     <script src="{{ asset('frontend/js/main.js') }}"></script>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
     @stack('scripts')
 </body>
 
