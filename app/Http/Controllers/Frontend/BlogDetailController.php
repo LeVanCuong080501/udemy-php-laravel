@@ -52,23 +52,42 @@ class BlogDetailController extends Controller
     {
         // user chưa login mà đánh giá sẽ báo lỗi cần phải login
         if (!Auth::guard('member')->check()) {
-            // return back()->withErrors(['auth' => 'bạn cần phải đăng nhập để đánh giá bài viết']);
             return response()->json([
                 'status' => 'error',
                 'message' => 'Vui lòng đăng nhập để đánh giá bài viết'
             ], 401);
         }
 
-        // Nếu đã rate rồi thì UPDATE, chưa thì CREATE
-        Rate::updateOrCreate(
-            [
-                'blog_id' => $request->blog_id,
-                'user_id' => Auth::guard('member')->id(),
-            ],
-            [
+        // ================= phần này dùng cho user vote 1 lần =================
+        $userId = Auth::guard('member')->id();
+        $blogId = $request->blog_id;
+        $checkRate = Rate::where('user_id', $userId)
+            ->where('blog_id', $blogId)
+            ->first();
+        if ($checkRate) {
+            return response()->json([
+                'status' => 'already_rated',
+                'message' => 'Bạn đã đánh giá bài viết này rồi!'
+            ], 400);
+        } else {
+            Rate::create([
+                'blog_id' => $blogId,
+                'user_id' => $userId,
                 'score' => $request->score,
-            ]
-        );
+            ]);
+        }
+        // ======================================================================
+        
+        // Nếu đã rate rồi thì UPDATE, chưa thì CREATE === phần này dùng cho user vote nhiều lần
+        // Rate::updateOrCreate(
+        //     [
+        //         'blog_id' => $request->blog_id,
+        //         'user_id' => Auth::guard('member')->id(),
+        //     ],
+        //     [
+        //         'score' => $request->score,
+        //     ]
+        // );
 
         // Tính TBC tất cả điểm của bài viết này
         $avg = Rate::where('blog_id', $request->blog_id)->avg('score');

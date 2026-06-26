@@ -68,20 +68,25 @@
                         <ul class="ratings">
                             <li class="rate-this">Rate this item:</li>
                             <li>
-                                <!-- @php $displayRate = $userRate > 0 ? $userRate : $avgRate; @endphp -->
-                                
+                                @php $displayRate = $userRate > 0 ? $userRate : $avgRate; @endphp
+
                                 {{-- Hiển thị sao theo điểm TBC / cho user vote nhiều lần --}}
-                                @for($i = 1; $i <= 5; $i++)
-                                    <i class="fa fa-star star-rate {{ $i <= $avgRate ? 'color' : '' }}"
-                                        data-score="{{ $i }}" data-blog="{{ $data->id }}"
-                                        style="cursor:pointer; font-size:20px;"></i>
-                                @endfor
+                                <!-- <div class="rate-many">
+                                        @for($i = 1; $i <= 5; $i++)
+                                            <i class="fa fa-star star-rate-many {{ $i <= round($avgRate) ? 'color' : '' }}"
+                                                data-score="{{ $i }}" data-blog="{{ $data->id }}"
+                                                style="cursor:pointer; font-size:20px;"></i>
+                                        @endfor
+                                    </div> -->
 
                                 {{-- Hiển thị sao theo điểm TBC / cho user vote 1 lần --}}
-                                <!-- @for($i = 1; $i <= 5; $i++)
-                                    <i class="fa fa-star {{ $i <= round($avgRate) ? 'color' : '' }}"
-                                        style="cursor:pointer; font-size:20px;"></i>
-                                @endfor -->
+                                <div class="rate-one">
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <i class="fa fa-star star-rate-one {{ $i <= round($avgRate) ? 'color' : '' }}"
+                                            data-score="{{ $i }}" data-blog="{{ $data->id }}"
+                                            style="cursor:pointer; font-size:20px;"></i>
+                                    @endfor
+                                </div>
                             </li>
                             <li id="total-raters" class="color">{{ number_format($avgRate, 1) }}/5</li>
                             <li id="total-raters" class="color">({{ $totalRaters }} votes)</li>
@@ -223,10 +228,57 @@
 
         // ===== RATING =====
         // Hover sao: tô vàng các sao <= sao đang hover
-        document.querySelectorAll('.star-rate').forEach(function (star) {
+        // document.querySelectorAll('.star-rate-many').forEach(function (star) {
+        //     star.addEventListener('mouseover', function () {
+        //         const score = this.dataset.score;
+        //         document.querySelectorAll('.star-rate-many').forEach(function (s) {
+        //             s.classList.toggle('color', s.dataset.score <= score);
+        //         });
+        //     });
+
+        //     // Mouseout: quay về điểm đã chọn ($displayRate từ PHP)
+        //     star.addEventListener('mouseout', function () {
+        //         const current = {{ $userRate > 0 ? $userRate : $avgRate }};
+        //         document.querySelectorAll('.star-rate-many').forEach(function (s) {
+        //             s.classList.toggle('color', s.dataset.score <= current);
+        //         });
+        //     });
+
+        //     // ajax cho user vote nhiều lần
+        //     $('.star-rate-many').click(function () {
+        //         var checkLogin = "{{ Auth::guard('member')->check() }}";
+        //         if (checkLogin) {
+        //             var rate = $(this).data('score');
+        //             var blog_id = $(this).data('blog');
+        //             $('.star-rate-many').removeClass('color');
+        //             $(this).prevAll().addBack().addClass('color');
+        //             $.ajax({
+        //                 type: 'POST',
+        //                 url: '{{ route("blog.rate") }}',
+        //                 data: {
+        //                     score: rate,
+        //                     blog_id: blog_id
+        //                 },
+        //                 success: function (data) {
+        //                     // console.log(data);
+        //                     // $('#rate-message').html(data.message);
+        //                     showRateMessage('Đánh giá thành công!', 'green');
+        //                 },
+        //                 error: function (xhr) {
+        //                     console.log(xhr.responseText);
+        //                 }
+        //             });
+        //         } else {
+        //             showRateMessage('Vui lòng đăng nhập để đánh giá!', 'red');
+        //         }
+        //     });
+        // });
+
+        // Hover sao: tô vàng các sao <= sao đang hover
+        document.querySelectorAll('.star-rate-one').forEach(function (star) {
             star.addEventListener('mouseover', function () {
                 const score = this.dataset.score;
-                document.querySelectorAll('.star-rate').forEach(function (s) {
+                document.querySelectorAll('.star-rate-one').forEach(function (s) {
                     s.classList.toggle('color', s.dataset.score <= score);
                 });
             });
@@ -234,72 +286,59 @@
             // Mouseout: quay về điểm đã chọn ($displayRate từ PHP)
             star.addEventListener('mouseout', function () {
                 const current = {{ $userRate > 0 ? $userRate : $avgRate }};
-                document.querySelectorAll('.star-rate').forEach(function (s) {
+                document.querySelectorAll('.star-rate-one').forEach(function (s) {
                     s.classList.toggle('color', s.dataset.score <= current);
                 });
             });
+        });
+        // ajax cho user vote 1 lần
+        let hasRated = {{ $userRate > 0 ? 'true' : 'false' }};
+        $('.star-rate-one').click(function () {
+            if (hasRated) {
+                showRateMessage('Bạn đã đánh giá bài viết này rồi!', 'red');
+                return;
+            }
 
-            // Click: gửi AJAX rate
-            // star.addEventListener('click', function() {
-            //     const score = this.dataset.score;
+            var checkLogin = "{{ Auth::guard('member')->check() }}";
+            if (!checkLogin) {
+                showRateMessage('Vui lòng đăng nhập để đánh giá!', 'red');
+                return;
+            }
 
-            //     if (!IS_LOGIN) {
-            //         showRateMessage('Vui lòng đăng nhập để đánh giá!', 'red');
-            //         return;
-            //     }
+            var rate = $(this).data('score');
+            var blog_id = $(this).data('blog');
+            $('.star-rate-one').removeClass('color');
+            $(this).prevAll().addBack().addClass('color');
+            $.ajax({
+                type: 'POST',
+                url: '{{ route("blog.rate") }}',
+                data: {
+                    score: rate,
+                    blog_id: blog_id
+                },
+                success: function (data) {
+                    showRateMessage('Đánh giá thành công!', 'green');
+                    // khóa không cho vote tiếp
+                    hasRated = true;
 
-            //     fetch('{{ route("blog.rate") }}', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'X-CSRF-TOKEN': CSRF_TOKEN,
-            //         },
-            //         body: JSON.stringify({ blog_id: BLOG_ID, score: score })
-            //     })
-            //     .then(res => res.json())
-            //     .then(data => {
-            //         if (data.status === 'success') {
-            //             // Cập nhật sao hiển thị theo TBC mới
-            //             document.querySelectorAll('.star-rate').forEach(function(s) {
-            //                 s.classList.toggle('color', s.dataset.score <= data.avg);
-            //             });
-            //             document.getElementById('total-raters').textContent = '(' + data.total_raters + ' votes)';
-            //             showRateMessage('Đánh giá thành công!', 'green');
-            //         } else {
-            //             showRateMessage(data.message, 'red');
-            //         }
-            //     });
-            // });
-
-            $('.star-rate').click(function () {
-                var checkLogin = "{{ Auth::guard('member')->check() }}";
-                if (checkLogin) {
-                    var rate = $(this).data('score');
-                    var blog_id = $(this).data('blog');
-                    $('.star-rate').removeClass('color');
-                    $(this).prevAll().addBack().addClass('color');
-                    $.ajax({
-                        type: 'POST',
-                        url: '{{ route("blog.rate") }}',
-                        data: {
-                            score: rate,
-                            blog_id: blog_id
-                        },
-                        success: function (data) {
-                            // console.log(data);
-                            // $('#rate-message').html(data.message);
-                            showRateMessage('Đánh giá thành công!', 'green');
-                        },
-                        error: function (xhr) {
-                            console.log(xhr.responseText);
+                    // Cập nhật sao realtime theo avgRate mới từ server
+                    $('.star-rate-one').each(function () {
+                        const starScore = $(this).data('score');
+                        if (starScore <= Math.round(data.avg)) {
+                            $(this).addClass('color');
+                        } else {
+                            $(this).removeClass('color');
                         }
                     });
-                } else {
-                    showRateMessage('Vui lòng đăng nhập để đánh giá!', 'red');
+                },
+                error: function (xhr) {
+                    showRateMessage('Bạn đã đánh giá bài viết này rồi!', 'red');
+                    if (xhr.status === 400) {
+                        hasRated = true; // server bảo đã vote rồi → khóa luôn
+                    }
                 }
             });
         });
-
         function showRateMessage(msg, color) {
             const el = document.getElementById('rate-message');
             el.textContent = msg;
