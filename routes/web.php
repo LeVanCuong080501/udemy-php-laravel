@@ -68,7 +68,7 @@ Route::prefix('member')->name('member.')->group(function () {
     });
 });
 
-//blog //blog-detail-rate
+//blog //blog-detail-rate-cmt(reply)
 Route::prefix('blog')->name('blog.')->group(function () {
     Route::get('/', [BlogDetailController::class, 'index'])->name('index');
     Route::get('/detail/{id}', [BlogDetailController::class, 'detail'])->name('detail');
@@ -76,9 +76,20 @@ Route::prefix('blog')->name('blog.')->group(function () {
     // Rate - AJAX
     Route::post('/rate', [BlogDetailController::class, 'rate'])->name('rate');
 
-    // // Comment - AJAX
-    // Route::post('/comment', [BlogDetailController::class, 'storeComment'])->name('comment.store');
-    // Route::get('/{blogId}/comments', [BlogDetailController::class, 'loadComments'])->name('comment.load');
+    // Comment - AJAX
+    // Route::middleware('auth:member')->group(function () {
+    //     Route::post('/{blog}/comment', [BlogDetailController::class, 'storeComment'])->name('comment.store');
+    //     Route::post('/comment/{comment}/reply', [BlogDetailController::class, 'storeReply'])->name('comment.reply');
+
+    //     // route này sử dụng khi nhiều reply và load comment sau khi load trang
+    //     // Route::get('/{blogId}/comments', [BlogDetailController::class, 'loadComments'])->name('comment.load');
+    // });
+
+    Route::middleware('auth:member')->group(function () {
+        Route::post('/comment/{blog}', [BlogDetailController::class, 'storeComment'])->name('comment.store');
+        Route::post('/reply/{comment}', [BlogDetailController::class, 'storeReply'])->name('reply.store');
+    });
+
 
     // // Reaction - AJAX
     // Route::post('/reaction', [BlogDetailController::class, 'reaction'])->name('reaction');

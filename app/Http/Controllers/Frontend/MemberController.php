@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
 use App\Http\Requests\Frontend\LoginRequest;
 use App\Http\Requests\Frontend\RegisterRequest;
+
 use App\Models\Country;
 use App\Models\User;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
