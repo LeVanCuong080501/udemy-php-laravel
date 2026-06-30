@@ -3,10 +3,15 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
-use App\Models\Blog;
-use App\Models\Rate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use App\Http\Requests\Frontend\StoreCommentRequest;
+
+use App\Models\Blog;
+use App\Models\Comment;
+use App\Models\Rate;
+
 
 class BlogDetailController extends Controller
 {
@@ -44,7 +49,14 @@ class BlogDetailController extends Controller
 
         $totalRaters = Rate::where('blog_id', $id)->count();
 
-        return view('frontend.blog.detail', compact('data', 'prev', 'next', 'avgRate', 'userRate', 'totalRaters'));
+        // Lấy comments khi load trang
+        $comments = Comment::where('blog_id', $data->id)
+            ->whereNull('parent_id')       // chỉ lấy cmt cha
+            ->with(['user', 'replies.user']) // eager load user + replies kèm user của reply
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('frontend.blog.detail', compact('data', 'prev', 'next', 'avgRate', 'userRate', 'totalRaters', 'comments'));
     }
 
     // ============= RATE =============
@@ -77,7 +89,7 @@ class BlogDetailController extends Controller
             ]);
         }
         // ======================================================================
-        
+
         // Nếu đã rate rồi thì UPDATE, chưa thì CREATE === phần này dùng cho user vote nhiều lần
         // Rate::updateOrCreate(
         //     [
@@ -102,6 +114,80 @@ class BlogDetailController extends Controller
             'avg' => $roundedAvg,   // số sao hiển thị (đã làm tròn)
             'total_raters' => $totalRaters,
             'message' => 'Đánh giá thành công!'
+        ]);
+    }
+
+    // ============= COMMENT =============
+    // Gửi comment cha
+    public function storeComment(StoreCommentRequest $request, Blog $blog)
+    {
+        // Kiểm tra login (middleware đã chặn nhưng check thêm cho chắc)
+        if (!Auth::guard('member')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vui lòng đăng nhập để bình luận!'
+            ], 401);
+        }
+
+        $comment = Comment::create([
+            'blog_id' => $blog->id,
+            'user_id' => Auth::guard('member')->id(),
+            'parent_id' => null,
+            'content' => $request->validated('content'),
+        ]);
+
+        // Load thêm thông tin user để trả về
+        $comment->load('user');
+
+        return response()->json([
+            'success' => true,
+            'comment' => [
+                'id' => $comment->id,
+                'content' => $comment->content,
+                'created_at' => $comment->created_at->diffForHumans(),
+                'user' => [
+                    'name' => $comment->user->name,
+                    'avatar' => $comment->user->avatar
+                        ? asset('uploads/avatars/' . $comment->user->avatar)
+                        : asset('frontend/images/default-avatar.png'),
+                ],
+            ],
+        ]);
+    }
+
+    // Gửi reply (comment con)
+    public function storeReply(StoreCommentRequest $request, Comment $comment)
+    {
+        if (!Auth::guard('member')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vui lòng đăng nhập để bình luận'
+            ], 401);
+        }
+
+        $reply = Comment::create([
+            'blog_id' => $comment->blog_id,
+            'user_id' => Auth::guard('member')->id(),
+            'parent_id' => $comment->id,
+            'content' => $request->validated('content'),
+        ]);
+
+        $reply->load('user');
+
+        return response()->json([
+            'success' => true,
+            'reply' => [
+                'id' => $reply->id,
+                'content' => $reply->content,
+                'created_at' => $reply->created_at->diffForHumans(),
+                'parent_id' => $reply->parent_id,
+                'user' => [
+                    'name' => $reply->user->name,
+                    'avatar' => $reply->user->avatar
+                        ? asset('uploads/avatars/' . $reply->user->avatar)
+                        : asset('frontend/images/default-avatar.png'),
+                ],
+            ],
         ]);
     }
 }
